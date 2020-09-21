@@ -50,7 +50,7 @@ export const UNFOLLOW_FAILURE = "UNFOLLOW_FAILURE";
 
 export const ADD_POST_TO_ME = "ADD_POST_TO_ME";
 export const REMOVE_POST_OF_ME = "REMOVE_POST_OF_ME";
-
+/*
 const dummyUser = (data) => ({
   ...data,
   nickname: "제로초",
@@ -59,7 +59,7 @@ const dummyUser = (data) => ({
   Followings: [{ ninkname: "부기초" }, { ninkname: "ㄱㅎㅊ" }, { ninkname: "ㄱㄷ" }],
   Followers: [{ ninkname: "부기초" }, { ninkname: "ㄱㅎㅊ" }, { ninkname: "ㄱㄷ" }],
 });
-
+*/
 export const loginRequsetAction = (data) => {
   return {
     type: LOG_IN_REQUEST,
@@ -112,7 +112,7 @@ const reducer = (state = initialState, action) => {
         break;
       case LOG_IN_SUCCESS:
         draft.logInLoading = false;
-        draft.me = dummyUser(action.data);
+        draft.me = action.data;
         draft.logInDone = true;
         break;
       case LOG_IN_FAILURE:

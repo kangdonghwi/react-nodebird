@@ -1,6 +1,7 @@
-import React, { useCallback, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import AppLayout from "../components/AppLayout";
 import Head from "next/head";
+import Router from "next/router";
 import { Form, Input, Checkbox, Button } from "antd";
 import styled from "styled-components";
 import useInput from "../hooks/useInput";
@@ -13,7 +14,25 @@ const ErrorMessage = styled.div`
 
 const Signup = () => {
   const dispatch = useDispatch();
-  const { signUpLoading } = useSelector((state) => state.user);
+  const { signUpLoading, signUpDone, signUpError, me } = useSelector((state) => state.user);
+
+  useEffect(() => {
+    if (me && me.id) {
+      Router.replace("/");
+    }
+  }, [me && me.id]);
+
+  useEffect(() => {
+    if (signUpDone) {
+      Router.replace("/");
+    }
+  }, [signUpDone]);
+
+  useEffect(() => {
+    if (signUpError) {
+      alert(signUpError);
+    }
+  }, [signUpError]);
 
   const [email, onChangeEmail] = useInput("");
   const [nickname, onChangeNickname] = useInput("");
@@ -23,7 +42,7 @@ const Signup = () => {
   const onChangePasswordCheck = useCallback(
     (e) => {
       setPasswordCheck(e.target.value);
-      setPasswordError(e.tartget.value !== password);
+      setPasswordError(e.target.value !== password);
     },
     [password]
   );
@@ -81,8 +100,8 @@ const Signup = () => {
             <br />
             <Input
               name="user-password-check"
-              value={password}
-              type="passwordCheck"
+              value={passwordCheck}
+              type="password"
               onChange={onChangePasswordCheck}
               required
             />
