@@ -1,4 +1,5 @@
 const express = require("express");
+const { Op } = require("sequelize");
 
 const { User, Post, Image, Comment } = require("../models");
 
@@ -6,6 +7,11 @@ const router = express.Router();
 
 router.get("/", async (req, res, next) => {
   try {
+    const where = {};
+    if (parseInt(req.query.lastId, 10)) {
+      //초기 로딩이 아닐 때
+      where.id = { [Op.lt]: parseInt(req.query.lastId, 10) };
+    }
     const posts = await Post.findAll({
       limit: 10, //offset 방식 단점 - 중간에 내용을 추가,삭제하면 꼬임.
       order: [

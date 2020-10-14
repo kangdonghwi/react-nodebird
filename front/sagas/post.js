@@ -86,13 +86,13 @@ function* unlikePost(action) {
   }
 }
 
-function loadPostsAPI(data) {
-  return axios.get("/posts", data);
+function loadPostsAPI(lastId) {
+  return axios.get(`/posts?lastId=${lastId || 0}`);
 }
 
 function* loadPosts(action) {
   try {
-    const result = yield call(loadPostsAPI, action.data); //fork는 비동기 함수호출 call은 동기 함수호출
+    const result = yield call(loadPostsAPI, action.lastId); //fork는 비동기 함수호출 call은 동기 함수호출
     yield put({
       type: LOAD_POSTS_SUCCESS,
       data: result.data,

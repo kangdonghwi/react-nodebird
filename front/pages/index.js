@@ -6,6 +6,7 @@ import PostForm from "../components/PostForm";
 import PostCard from "../components/PostCard";
 import { LOAD_POSTS_REQUEST } from "../reducers/post";
 import { LOAD_USER_REQUEST } from "../reducers/user";
+import wrapper from "../store/configureStore";
 
 const Home = () => {
   const dispatch = useDispatch();
@@ -29,8 +30,10 @@ const Home = () => {
         document.documentElement.scrollHeight - 300
       ) {
         if (hasMorePost && !loadPostsLoading) {
+          const lastId = mainPosts[mainPosts.length - 1]?.id;
           dispatch({
             type: LOAD_POSTS_REQUEST,
+            lastId,
           });
         }
       }
@@ -39,7 +42,7 @@ const Home = () => {
     return () => {
       window.removeEventListener("scroll", onScroll);
     };
-  }, [hasMorePost, loadPostsLoading]);
+  }, [hasMorePost, loadPostsLoading, mainPosts]);
 
   return (
     <>
@@ -55,5 +58,15 @@ const Home = () => {
     </>
   );
 };
+
+export const getServerSideProps = wrapper.getServerSideProps((context) => {
+  context.store.dispatch({
+    type: LOAD_USER_REQUEST,
+  });
+
+  context.store.dispatch({
+    type: LOAD_POSTS_REQUEST,
+  });
+});
 
 export default Home;
